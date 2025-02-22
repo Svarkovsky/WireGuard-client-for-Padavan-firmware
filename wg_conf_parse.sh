@@ -62,9 +62,9 @@ process_config() {
     # Запись в промежуточный файл
     echo "[Interface]" > "$TMP_FILE"
     echo "PrivateKey = $PrivateKey" >> "$TMP_FILE"
-    echo "MTU = $MTU" >> "$TMP_FILE"
-    echo "Address = $Address" >> "$TMP_FILE"
-    echo "DNS = $DNS" >> "$TMP_FILE"
+#    echo "MTU = $MTU" >> "$TMP_FILE"
+#    echo "Address = $Address" >> "$TMP_FILE"
+#    echo "DNS = $DNS" >> "$TMP_FILE"
     echo "" >> "$TMP_FILE"
     echo "[Peer]" >> "$TMP_FILE"
     echo "PublicKey = $PublicKey" >> "$TMP_FILE"
