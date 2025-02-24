@@ -114,6 +114,16 @@ manage_ipset() {
     [ -f "$IPSET_BACKUP_FILE" ] && ipset restore -exist -f "$IPSET_BACKUP_FILE"
 }
 
+# Аналог timeout для ash
+timeout_ash() {
+    seconds=$1; shift
+    "$@" & cmd_pid=$!
+    ( sleep "$seconds"; kill -9 "$cmd_pid" 2>/dev/null ) & sleep_pid=$!
+    wait "$cmd_pid" 2>/dev/null; cmd_status=$?
+    kill -9 "$sleep_pid" 2>/dev/null
+    return "$cmd_status"
+}
+
 # Обновление доменов в IPset
 update_domains() {
     [ ! -f "$DOMAINS_FILE" ] && { log "Domains file missing: $DOMAINS_FILE" "$RED"; exit 1; }
@@ -124,7 +134,7 @@ update_domains() {
 
     while read -r domain || [ -n "$domain" ]; do
         [ -z "$domain" ] || [ "${domain#\#}" != "$domain" ] && continue
-        ( nslookup "$domain" localhost 2>/dev/null | 
+        ( timeout_ash 3 nslookup "$domain" localhost 2>/dev/null | 
           awk '/Address/ {if($NF ~ /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/) print $NF}' | 
           grep -v "127.0.0.1" | while read -r ip; do
               ipset -exist add "$IPSET_NAME" "$ip" timeout "$IPSET_TIMEOUT" comment "$domain"
@@ -222,3 +232,4 @@ case "$1" in
     -h)     echo "Usage: $0 [start|stop|restart|update|clean] [-v] [config_file]"; exit 0 ;;
     *)      log "Unknown command: $1" "$RED"; exit 1 ;;
 esac
+
