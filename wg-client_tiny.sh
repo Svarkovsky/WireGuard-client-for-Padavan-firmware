@@ -284,7 +284,7 @@ start() {
 
   ( while true; do
       save_ipset
-      sleep 1s $IPSET_BACKUP_INTERVAL &
+      sleep $IPSET_BACKUP_INTERVAL &
       child_pid="$!"
       echo $child_pid >> $PID_FILE
       wait $child_pid
@@ -295,7 +295,7 @@ start() {
 
   ( while true; do
       update &
-      sleep 1s $DOMAINS_UPDATE_INTERVAL &
+      sleep $DOMAINS_UPDATE_INTERVAL &
       child_pid="$!"
       echo $child_pid >> $PID_FILE
       wait $child_pid
