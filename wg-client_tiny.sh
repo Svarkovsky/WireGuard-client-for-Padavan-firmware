@@ -20,6 +20,7 @@ init_config() {
     IFACE="wg0"
     IPSET_NAME="unblock-list"
     IPSET_TIMEOUT=43200  # 12 часов
+    COMMENT_UPDATE_INTERVAL="20" 
     DOMAINS_UPDATE_INTERVAL=10800  # 3 часа
     IPSET_BACKUP="true" # true/false
     IPSET_BACKUP_INTERVAL=10800    # 3 часа
@@ -116,10 +117,10 @@ wait_for_dnsmasq() {
   log "\nWaiting for dnsmasq to start..." $GREEN
   if ! pgrep dnsmasq > /dev/null 2>&1; then
     while ! pgrep dnsmasq > /dev/null 2>&1; do
-      sleep 5s
+      sleep 5
     done
   else
-    sleep 5s
+    sleep 5
   fi
 }
 
@@ -273,7 +274,7 @@ start() {
 
   ( while true; do
       update_ipset_from_syslog
-      sleep 1s $COMMENT_UPDATE_INTERVAL &
+      sleep $COMMENT_UPDATE_INTERVAL &
       child_pid="$!"
       echo $child_pid >> $PID_FILE
       wait $child_pid
