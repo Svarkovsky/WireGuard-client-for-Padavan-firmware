@@ -20,7 +20,7 @@ init_config() {
     IFACE="wg0"
     IPSET_NAME="unblock-list"
     IPSET_TIMEOUT=43200  # 12 часов
-    COMMENT_UPDATE_INTERVAL="20" 
+    COMMENT_UPDATE_INTERVAL=20
     DOMAINS_UPDATE_INTERVAL=10800  # 3 часа
     IPSET_BACKUP="true" # true/false
     IPSET_BACKUP_INTERVAL=10800    # 3 часа
